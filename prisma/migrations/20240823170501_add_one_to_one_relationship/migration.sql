@@ -35,6 +35,9 @@ CREATE TABLE "Post" (
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Token_userId_key" ON "Token"("userId");
+
 -- AddForeignKey
 ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 

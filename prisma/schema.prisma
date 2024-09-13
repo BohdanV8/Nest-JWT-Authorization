@@ -9,23 +9,25 @@ datasource db {
 
 model User {
   id  Int @id @default(autoincrement())
-  username String @unique
+  email String @unique
   password  String
   firstName String
   lastName String
   hobby String
+  isActivated Boolean @default(false)
+  activationLink String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   posts Post[]
-  tokens Token[]
+  token Token?
 }
 
 model Token {
-  id Int @id
+  id Int @id @default(autoincrement())
   user  User  @relation(fields: [userId], references: [id])
-  userId Int
-  refreshToken String
+  userId Int @unique
+  refreshToken String @unique
 }
 
 model Post {

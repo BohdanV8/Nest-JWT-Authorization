@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateTokenPayloadDto } from './dto/create-token-payload.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma.service';
-import { Token, User } from '@prisma/client';
+import { Token } from '@prisma/client';
 @Injectable()
 export class TokensService {
   constructor(
@@ -75,7 +75,7 @@ export class TokensService {
 
   validateAccessToken(token: string) {
     try {
-      const userData = this.jwtService.verify(token, {
+      const userData: CreateTokenPayloadDto = this.jwtService.verify(token, {
         secret: process.env.JWT_ACCESS_SECRET,
       });
 
@@ -87,7 +87,7 @@ export class TokensService {
 
   validateRefreshToken(token: string) {
     try {
-      const userData = this.jwtService.verify(token, {
+      const userData: CreateTokenPayloadDto = this.jwtService.verify(token, {
         secret: process.env.JWT_REFRESH_SECRET,
       });
 

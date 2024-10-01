@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { MailService } from './mail.service';
-import { TokensService } from './tokens.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CreateTokenPayloadDto } from './dto/create-token-payload.dto';
 import * as bcrypt from 'bcrypt';
@@ -9,6 +8,7 @@ import { BadRequestException } from '@nestjs/common';
 import { UnauthorizedException } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
+import { TokensService } from 'src/tokens.service';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +36,7 @@ export class AuthService {
 
     await this.mailService.sendActivationMail(
       data.email,
-      `${process.env.API_URL}/api/users/activate/${activationLink}`,
+      `${process.env.API_URL}/api/auth/activate/${activationLink}`,
     );
 
     const payload: CreateTokenPayloadDto = new CreateTokenPayloadDto(newUser);
@@ -96,7 +96,13 @@ export class AuthService {
       },
     });
 
-    return activatedUser;
+    const payload: CreateTokenPayloadDto = new CreateTokenPayloadDto(activatedUser);
+    const tokens = await this.tokenService.generateTokens({ ...payload });
+    const refreshToken = await this.tokenService.saveToken(
+      activatedUser.id,
+      tokens.refreshToken,
+    );
+    return { ...tokens, user: payload };
   }
 
   async refresh(refreshToken: string) {

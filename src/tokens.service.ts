@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTokenPayloadDto } from './dto/create-token-payload.dto';
+import { CreateTokenPayloadDto } from './auth/dto/create-token-payload.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma.service';
 import { Token } from '@prisma/client';

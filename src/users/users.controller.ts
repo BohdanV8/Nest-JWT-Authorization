@@ -10,7 +10,8 @@ import { Roles } from 'src/customDecorators/roles.decorator';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
+  @Get("findAll")
+  @Roles("user", "admin")
   findAll() {
     return this.usersService.findAll();
   }
@@ -21,6 +22,7 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @Roles('user', 'admin')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }

@@ -7,4 +7,5 @@ export class CreateUserDto {
   firstName: string;
   lastName: string;
   hobby: string;
+  role?: string
 }

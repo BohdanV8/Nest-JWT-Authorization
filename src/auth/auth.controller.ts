@@ -22,11 +22,10 @@ export class AuthController {
 
   @Post('login')
   async login(
-    @Body() email: string,
-    password: string,
+    @Body() body: { email: string; password: string },
     @Res({ passthrough: true }) response: Response,
   ) {
-    const userData = await this.authService.login(email, password);
+    const userData = await this.authService.login(body.email, body.password);
     response.cookie('refreshToken', userData.refreshToken, {
       httpOnly: true,
       maxAge: 20 * 24 * 60 * 60 * 1000,
@@ -46,8 +45,13 @@ export class AuthController {
   }
 
   @Get('/activate/:link')
-  async activateLink(@Param('link') link: string) {
-    return this.authService.activate(link);
+  async activateLink(@Param('link') link: string, @Res({ passthrough: true }) response: Response,) {
+    const userData = await this.authService.activate(link);
+    response.cookie('refreshToken', userData.refreshToken, {
+      httpOnly: true,
+      maxAge: 20 * 24 * 60 * 60 * 1000,
+    });
+    return userData;
   }
 
   @Post('refresh')
